@@ -2,7 +2,9 @@ defmodule TwitterPhoenix.TweetController do
   use TwitterPhoenix.Web, :controller
 
   alias TwitterPhoenix.Tweet
+  alias TwitterPhoenix.User
 
+  plug :load_user
   plug :scrub_params, "tweet" when action in [:create, :update]
 
   def index(conn, _params) do
@@ -16,16 +18,18 @@ defmodule TwitterPhoenix.TweetController do
   end
 
   def create(conn, %{"tweet" => tweet_params}) do
-    changeset = Tweet.changeset(%Tweet{}, tweet_params)
+    changeset =
+      Ecto.build_assoc(conn.assigns[:user], :tweets, %{like_count: 0, retweet_count: 0})
+      |> Tweet.changeset(tweet_params)
 
     case Repo.insert(changeset) do
       {:ok, tweet} ->
 
-        
+        TwitterPhoenix.Mentions.notify_async(tweet)
 
         conn
         |> put_flash(:info, "Tweet created successfully.")
-        |> redirect(to: tweet_path(conn, :index))
+        |> redirect(to: user_tweet_path(conn, :index, conn.assigns[:user].username))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -50,7 +54,7 @@ defmodule TwitterPhoenix.TweetController do
       {:ok, tweet} ->
         conn
         |> put_flash(:info, "Tweet updated successfully.")
-        |> redirect(to: tweet_path(conn, :show, tweet))
+        |> redirect(to: user_tweet_path(conn, :show, conn.assigns[:user].username, tweet))
       {:error, changeset} ->
         render(conn, "edit.html", tweet: tweet, changeset: changeset)
     end
@@ -65,6 +69,12 @@ defmodule TwitterPhoenix.TweetController do
 
     conn
     |> put_flash(:info, "Tweet deleted successfully.")
-    |> redirect(to: tweet_path(conn, :index))
+    |> redirect(to: user_tweet_path(conn, :index, conn.assigns[:user].username))
+  end
+
+  defp load_user(conn, _) do
+    username = conn.params["user_id"]
+    user = Repo.get_by!(User, username: username)
+    assign(conn, :user, user)
   end
 end

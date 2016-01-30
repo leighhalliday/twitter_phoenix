@@ -7,6 +7,9 @@ defmodule TwitterPhoenix.User do
     field :email, :string
     field :bio, :string
 
+    has_many :tweets, TwitterPhoenix.Tweet
+    has_many :notifications, TwitterPhoenix.Notification
+
     timestamps
   end
 

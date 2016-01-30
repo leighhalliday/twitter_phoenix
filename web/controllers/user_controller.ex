@@ -29,18 +29,18 @@ defmodule TwitterPhoenix.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    user = Repo.get!(User, id)
+    user = Repo.get_by!(User, username: id)
     render(conn, "show.html", user: user)
   end
 
   def edit(conn, %{"id" => id}) do
-    user = Repo.get!(User, id)
+    user = Repo.get_by!(User, username: id)
     changeset = User.changeset(user)
     render(conn, "edit.html", user: user, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Repo.get!(User, id)
+    user = Repo.get_by!(User, username: id)
     changeset = User.changeset(user, user_params)
 
     case Repo.update(changeset) do
@@ -54,7 +54,7 @@ defmodule TwitterPhoenix.UserController do
   end
 
   def delete(conn, %{"id" => id}) do
-    user = Repo.get!(User, id)
+    user = Repo.get_by!(User, username: id)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).

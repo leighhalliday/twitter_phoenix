@@ -17,8 +17,9 @@ defmodule TwitterPhoenix.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-    resources "/users", UserController
-    resources "/tweets", TweetController
+    resources "/users", UserController do
+      resources "/tweets", TweetController
+    end
   end
 
   # Other scopes may use custom stacks.

@@ -24,5 +24,5 @@
 
 </ul>
 
-<%= link "Edit", to: tweet_path(@conn, :edit, @tweet) %>
-<%= link "Back", to: tweet_path(@conn, :index) %>
+<%= link "Edit", to: user_tweet_path(@conn, :edit, username(@conn), @tweet) %>
+<%= link "Back", to: user_tweet_path(@conn, :index, username(@conn)) %>
