@@ -1,0 +1,28 @@
+<h2>Show tweet</h2>
+
+<ul>
+
+  <li>
+    <strong>User:</strong>
+    <%= @tweet.user_id %>
+  </li>
+
+  <li>
+    <strong>Body:</strong>
+    <%= @tweet.body %>
+  </li>
+
+  <li>
+    <strong>Retweet count:</strong>
+    <%= @tweet.retweet_count %>
+  </li>
+
+  <li>
+    <strong>Like count:</strong>
+    <%= @tweet.like_count %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: tweet_path(@conn, :edit, @tweet) %>
+<%= link "Back", to: tweet_path(@conn, :index) %>

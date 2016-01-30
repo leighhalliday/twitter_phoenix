@@ -1,0 +1,6 @@
+<h2>Edit tweet</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: tweet_path(@conn, :update, @tweet) %>
+
+<%= link "Back", to: tweet_path(@conn, :index) %>
