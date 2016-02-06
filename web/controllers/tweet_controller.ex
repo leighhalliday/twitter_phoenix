@@ -1,14 +1,13 @@
 defmodule TwitterPhoenix.TweetController do
   use TwitterPhoenix.Web, :controller
 
-  alias TwitterPhoenix.Tweet
-  alias TwitterPhoenix.User
+  alias TwitterPhoenix.{Tweet, User, UserTweets}
 
   plug :load_user
   plug :scrub_params, "tweet" when action in [:create, :update]
 
   def index(conn, _params) do
-    tweets = Repo.all(Tweet)
+    tweets = UserTweets.latest(conn.assigns[:user])
     render(conn, "index.html", tweets: tweets)
   end
 
@@ -73,8 +72,7 @@ defmodule TwitterPhoenix.TweetController do
   end
 
   defp load_user(conn, _) do
-    username = conn.params["user_id"]
-    user = Repo.get_by!(User, username: username)
+    user = Repo.get_by!(User, username: conn.params["user_id"])
     assign(conn, :user, user)
   end
 end

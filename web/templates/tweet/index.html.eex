@@ -1,4 +1,4 @@
-<h2>Listing tweets</h2>
+<h2>Listing tweets for <%= username(@conn) %></h2>
 
 <table class="table">
   <thead>
@@ -7,24 +7,20 @@
       <th>Body</th>
       <th>Retweet count</th>
       <th>Like count</th>
-
       <th></th>
     </tr>
   </thead>
   <tbody>
-<%= for tweet <- @tweets do %>
+    <%= for tweet <- @tweets do %>
     <tr>
-      <td><%= tweet.user_id %></td>
       <td><%= tweet.body %></td>
       <td><%= tweet.retweet_count %></td>
       <td><%= tweet.like_count %></td>
-
       <td class="text-right">
         <%= link "Show", to: user_tweet_path(@conn, :show, username(@conn), tweet), class: "btn btn-default btn-xs" %>
-        <%= link "Delete", to: user_tweet_path(@conn, :delete, username(@conn), tweet), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
       </td>
     </tr>
-<% end %>
+    <% end %>
   </tbody>
 </table>
 
